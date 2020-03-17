@@ -14,10 +14,19 @@ static bool do_help_cmd(int argc, char *argv[]);
 static bool interpret_cmda(int argc, char *argv[]); 
 static bool interpret_cmd(char *cmdline);
 
+void completion(const char *buf, linenoiseCompletions *lc) 
+{
+    if (buf[0] == 'h') {
+        linenoiseAddCompletion(lc,"hello");
+    }
+}
+
 void init_cmd() 
 {
 	add_cmd("hello", do_hello_cmd, "                | Test command");
 	add_cmd("help", do_help_cmd, "                | Show documentation");
+
+    linenoiseSetCompletionCallback(completion);
 }
 
 static bool do_help_cmd(int argc, char *argv[]) 
@@ -38,7 +47,7 @@ static bool do_hello_cmd(int argc, char *argv[])
         return 0;
     }
 
-    printf("[*] argv[0] : %s , argv[1] : %s , argv[2] : %s \n", argv[0], argv[1], argv[2]);
+    printf(" argv[0] : %s \n argv[1] : %s \n argv[2] : %s \n", argv[0], argv[1], argv[2]);
 
     return 1;
 }
