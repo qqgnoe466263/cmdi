@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 #include "console.h"
 #include "linenoise.h"
@@ -11,8 +14,11 @@ static cmd_ptr cmd_list = NULL;
 
 static bool do_hello_cmd(int argc, char *argv[]);
 static bool do_help_cmd(int argc, char *argv[]);
+static bool do_ls_cmd(int argc, char *argv[]);
 static bool interpret_cmda(int argc, char *argv[]); 
 static bool interpret_cmd(char *cmdline);
+
+extern char **environ;
 
 void completion(const char *buf, linenoiseCompletions *lc) 
 {
@@ -25,6 +31,7 @@ void init_cmd()
 {
 	add_cmd("hello", do_hello_cmd, "                | Test command");
 	add_cmd("help", do_help_cmd, "                | Show documentation");
+	add_cmd("ls", do_ls_cmd, "                | Show list directory contents");
 
     linenoiseSetCompletionCallback(completion);
 }
@@ -50,6 +57,28 @@ static bool do_hello_cmd(int argc, char *argv[])
     printf(" argv[0] : %s \n argv[1] : %s \n argv[2] : %s \n", argv[0], argv[1], argv[2]);
 
     return 1;
+}
+
+static bool do_ls_cmd(int argc, char *argv[])
+{
+	pid_t pid;
+	int status;
+	int len = strlen(argv[0]);
+	char *path = malloc(len + 5);
+	strncpy(path, "/bin/", 5);
+	strncat(path, argv[0], len);
+
+	if ((pid = fork()) == 0) {
+		if (execve(path , argv, environ) < 0) {
+			exit(0);
+		}
+	}
+	
+	if (waitpid(pid, &status, 0) < 0) {
+		perror("[!] ls error");
+	}
+
+	return 0;
 }
 
 void add_cmd(char *name, cmd_function operation, char *documentation) 
