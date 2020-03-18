@@ -65,6 +65,7 @@ static bool do_ls_cmd(int argc, char *argv[])
 	int status;
 	int len = strlen(argv[0]);
 	char *path = malloc(len + 5);
+    memset(path,'\x00',len+5);
 	strncpy(path, "/bin/", 5);
 	strncat(path, argv[0], len);
 
