@@ -17,7 +17,7 @@ static void init_cmdi()
 
 int main() 
 {
-    init_cmdi();
+    //init_cmdi();
     init_cmd();
     run_console();
 }

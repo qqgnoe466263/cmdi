@@ -149,7 +149,7 @@ static bool interpret_cmda(int argc, char *argv[])
 	if (next_cmd) {
 		ok = next_cmd->operation(argc, argv);
 	} else {
-		printf("Unknown command %s", argv[0]);
+		printf("Unknown command %s \n", argv[0]);
 		ok = false;
 	}
 
@@ -174,8 +174,10 @@ void run_console()
 	char *cmdline;
 	while (1) {
 		cmdline = linenoise(prompt);
-		interpret_cmd(cmdline);
-		free(cmdline);
+        if (*cmdline) {
+		    interpret_cmd(cmdline);
+		    free(cmdline);
+        }
 	}
 }
 
