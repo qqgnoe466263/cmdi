@@ -1,6 +1,6 @@
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <signal.h>
 
 #include "console.h"
 
@@ -15,9 +15,9 @@ static void init_cmdi()
 }
 
 
-int main() 
+int main()
 {
-    //init_cmdi();
+    // init_cmdi();
     init_cmd();
     run_console();
 }
