@@ -1,6 +1,6 @@
 CC  := gcc 
 out := cmdi
-obj := cmdi.o console.o linenoise.o
+obj := cmdi.o console.o linenoise.o random.o
 CFLAGS = -g
 
 all: $(obj)

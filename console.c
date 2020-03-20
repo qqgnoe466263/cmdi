@@ -8,6 +8,7 @@
 
 #include "console.h"
 #include "linenoise.h"
+#include "random.h"
 
 static char *prompt = "cmd> ";
 static cmd_ptr cmd_list = NULL;
@@ -15,6 +16,7 @@ static cmd_ptr cmd_list = NULL;
 static bool do_hello_cmd(int argc, char *argv[]);
 static bool do_help_cmd(int argc, char *argv[]);
 static bool do_ls_cmd(int argc, char *argv[]);
+static bool do_random_cmd(int argc, char *argv[]);
 static bool interpret_cmda(int argc, char *argv[]);
 static bool interpret_cmd(char *cmdline);
 
@@ -32,6 +34,7 @@ void init_cmd()
     add_cmd("hello", do_hello_cmd, "                | Test command");
     add_cmd("help", do_help_cmd, "                | Show documentation");
     add_cmd("ls", do_ls_cmd, "                | Show list directory contents");
+    add_cmd("rn", do_random_cmd, "                | Get an random_number");
 
     linenoiseSetCompletionCallback(completion);
 }
@@ -50,7 +53,7 @@ static bool do_help_cmd(int argc, char *argv[])
 static bool do_hello_cmd(int argc, char *argv[])
 {
     if (argc != 3) {
-        printf("[!] Usage : hello world test \n");
+        fprintf(stdout, "[!] Usage : hello <argv[1]> <argv[2]> \n");
         return 0;
     }
 
@@ -80,8 +83,20 @@ static bool do_ls_cmd(int argc, char *argv[])
         perror("[!] ls error");
     }
 
-    return 0;
+    return 1;
 }
+
+static bool do_random_cmd(int argc, char *argv[])
+{
+	if (argc != 2) {
+		fprintf(stdout, "[!] Usage : rn <range> \n");
+		return 0;
+	}
+	printf("Get an random number : %d\n", random_number() % 100);
+
+	return 1;
+}
+
 
 void add_cmd(char *name, cmd_function operation, char *documentation)
 {
